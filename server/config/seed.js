@@ -5,6 +5,7 @@
 
 'use strict';
 import User from '../api/user/user.model';
+import Photo from '../api/photo/photo.model';
 
 User.find({}).removeAsync()
   .then(() => {
@@ -22,5 +23,19 @@ User.find({}).removeAsync()
     })
     .then(() => {
       console.log('finished populating users');
+    });
+  });
+
+Photo.find({}).removeAsync()
+  .then(() => {
+    Photo.createAsync({
+      name: 'photo1',
+      description: 'awesome selfie',
+    }, {
+      name: 'photo2',
+      description: 'picture of dog',
+    })
+    .then(() => {
+      console.log('finished populating photos');
     });
   });
