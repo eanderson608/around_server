@@ -1,15 +1,10 @@
 import passport from 'passport';
-import {Strategy as FacebookStrategy} from 'passport-facebook';
+import {Strategy as FacebookTokenStrategy} from 'passport-facebook-token';
 
 export function setup(User, config) {
-  passport.use(new FacebookStrategy({
-    clientID: config.facebook.clientID,
-    clientSecret: config.facebook.clientSecret,
-    callbackURL: config.facebook.callbackURL,
-    profileFields: [
-      'displayName',
-      'emails'
-    ]
+  passport.use(new FacebookTokenStrategy({
+    clientID: process.env.FACEBOOK_ID,
+    clientSecret: process.env.FACEBOOK_SECRET
   },
   function(accessToken, refreshToken, profile, done) {
     User.findOneAsync({
