@@ -2,19 +2,15 @@
 
 import express from 'express';
 import passport from 'passport';
-import {setTokenCookie} from '../auth.service';
+import {signToken} from '../auth.service';
 
 var router = express.Router();
 
-router
-  .get('/', passport.authenticate('facebook', {
-    scope: ['email', 'user_about_me'],
-    failureRedirect: '/signup',
-    session: false
-  }))
-  .get('/callback', passport.authenticate('facebook', {
-    failureRedirect: '/signup',
-    session: false
-  }), setTokenCookie);
+router.post('/', function(req, res, next) {
+  passport.authenticate('facebook-token', function(req, res) {
+      // do something with req.user
+      res.send(req.user? 200 : 401);
+    }
+  )});
 
 export default router;
