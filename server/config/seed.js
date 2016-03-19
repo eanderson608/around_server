@@ -10,16 +10,11 @@ import Photo from '../api/photo/photo.model';
 User.find({}).removeAsync()
   .then(() => {
     User.createAsync({
-      provider: 'local',
-      name: 'Test User',
-      email: 'test@example.com',
-      password: 'test'
-    }, {
-      provider: 'local',
-      role: 'admin',
-      name: 'Admin',
-      email: 'admin@example.com',
-      password: 'admin'
+      userId: '8000',
+      name: 'Yolo Swag',
+      firstName: 'Yolo',
+      lastName: 'Swag',
+      authToken: '342'
     })
     .then(() => {
       console.log('finished populating users');

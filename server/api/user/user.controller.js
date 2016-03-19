@@ -34,34 +34,28 @@ export function index(req, res) {
 /**
  * Creates a new user
  */
-export function create(req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
-  newUser.saveAsync()
-    .spread(function(user) {
-      var token = jwt.sign({ _id: user._id }, config.secrets.session, {
-        expiresIn: 60 * 60 * 5
-      });
-      res.json({ token });
-    })
-    .catch(validationError(res));
+export function create(req, res) {
+  User.createAsync(req.body)
+    .then(respondWithResult(res, 201))
+    .catch(handleError(res));
 }
 
 /**
  * Get a single user
  */
-export function show(req, res, next) {
-  var userId = req.params.id;
+export function show(req, res) {
+  User.findOneAsync({userId: req.params.userId})
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
 
-  User.findByIdAsync(userId)
-    .then(user => {
-      if (!user) {
-        return res.status(404).end();
-      }
-      res.json(user.profile);
-    })
-    .catch(err => next(err));
+// Updates an existing User in the DB
+export function update(req, res) {
+  User.update({userId: req.params.userId}, req.body)
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 /**
@@ -120,4 +114,33 @@ export function me(req, res, next) {
  */
 export function authCallback(req, res, next) {
   res.redirect('/');
+}
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if (!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
+
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if (entity) {
+      res.status(statusCode).json(entity);
+    }
+  };
+}
+
+function saveUpdates(updates) {
+  return function(entity) {
+    var updated = _.merge(entity, updates);
+    return updated.saveAsync()
+      .spread(updated => {
+        return updated;
+      });
+  };
 }
