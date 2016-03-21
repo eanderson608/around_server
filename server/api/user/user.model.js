@@ -9,7 +9,8 @@ var UserSchema = new Schema({
   firstName: String,
   lastName: String,
   userId: String,
-  authToken: String
+  authToken: String,
+  userImageUrl: String
 });
 
 /**

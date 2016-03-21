@@ -7,11 +7,15 @@
 import errors from './components/errors';
 import path from 'path';
 
+var express = require('express');
+var app = express();
+
 export default function(app) {
   // Insert routes below
   app.use('/api/photos', require('./api/photo'));
   app.use('/api/users', require('./api/user'));
   app.use('/auth', require('./auth'));
+  app.use('/uploads', express.static('./uploads'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
