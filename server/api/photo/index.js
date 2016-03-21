@@ -19,7 +19,7 @@ var storage = multer.diskStorage({
     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname + '-' + Date.now() + '.jpg')
+    cb(null, file.originalname)
   }
 })
 
@@ -29,6 +29,7 @@ router.post('/uploads', upload.single('file'), function (req, res) {
 
     var multiparty = require('multiparty');
     var util = require('util');
+    var fs = require('fs');
 
     var form = new multiparty.Form();
     form.parse(req, function(err, fields, files) {
@@ -38,6 +39,19 @@ router.post('/uploads', upload.single('file'), function (req, res) {
   		
 	});
     console.log(req.file);
+
+    // rename file
+    var tmp_path = req.file.path;
+    var target_path = './uploads/' + req.body.fileName;
+    console.log(target_path);
+
+    fs.rename(tmp_path, target_path, function(err) {
+        if (err) throw err;
+        // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
+        fs.unlink(tmp_path, function() {
+            if (err) throw err;
+        });
+    });
 
 	return;
   
