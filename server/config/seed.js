@@ -1,7 +1,8 @@
 /**
  * Populate DB with sample data on server start
  * to disable, edit config/environment/index.js, and set `seedDB: false`
- */
+*/
+
 
 'use strict';
 import User from '../api/user/user.model';
@@ -24,13 +25,15 @@ User.find({}).removeAsync()
 Photo.find({}).removeAsync()
   .then(() => {
     Photo.createAsync({
-      name: 'photo1',
-      description: 'awesome selfie',
-    }, {
-      name: 'photo2',
-      description: 'picture of dog',
+      userId: '8000',
+      filename: "String",
+      upvotes: 0,
+      downvotes: 0,
+      timeStamp: 6565,
     })
     .then(() => {
       console.log('finished populating photos');
     });
   });
+
+
