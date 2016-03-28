@@ -58,6 +58,19 @@ export function update(req, res) {
     .catch(handleError(res));
 }
 
+// increments users score by a positive or negative number
+export function incrementScore(req, res) {
+  var inc = {};
+  inc["score"] = req.query.amount;
+
+  console.log(req.params.userId, req.query.amount);
+
+  User.findOneAndUpdateAsync({userId :req.params.userId}, {$inc : inc})
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
 /**
  * Deletes a user
  * restriction: 'admin'

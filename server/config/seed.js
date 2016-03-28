@@ -29,7 +29,17 @@ Photo.find({}).removeAsync()
       filename: "String",
       upvotes: 0,
       downvotes: 0,
-      timeStamp: 6565,
+      score: 0,
+      time: 6565,
+      location: [0, 0]
+    }, {
+      userId: '34343',
+      filename: "String",
+      upvotes: 0,
+      downvotes: 0,
+      score: 0,
+      time: 455599,
+      location: [-89.0, 43.0]
     })
     .then(() => {
       console.log('finished populating photos');

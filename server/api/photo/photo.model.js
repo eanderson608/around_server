@@ -8,7 +8,8 @@ var PhotoSchema = new mongoose.Schema({
   fileName: String,
   upvotes: Number,
   downvotes: Number,
-  timeStamp: Number,
+  score: Number,
+  time: Number,
   location: {
     type: [Number],  
     index: '2dsphere'

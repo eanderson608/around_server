@@ -59,9 +59,39 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of Photos
+// Gets a list of Photos within maxDistance of longitude and latitude params
+// sorts by sortOn param.
 export function index(req, res) {
-  Photo.findAsync()
+  var sortOn = {};
+  var coords = [];
+  coords[0] = parseFloat(req.query.longitude) || 0; // set coords to 0 if not specified so
+  coords[1] = parseFloat(req.query.latitude) || 0;  // a null pointer exception doesnt crash the server
+  var maxDistance = parseInt(req.query.maxDistance);
+  sortOn[req.query.sortOn] = -1;
+  Photo.aggregate([{"$geoNear": 
+                      {"near": {"type": "Point", "coordinates" : coords}, 
+                      "distanceField": "distance", 
+                      "maxDistance" : maxDistance, 
+                      "spherical" : true}}, 
+                    {"$sort" : sortOn}], 
+  function(err, result){ 
+    if(err) {
+      res.send(err)
+      return null;
+    }
+    res.send(result)
+  });
+}
+
+// increments (by a positive or negative number) either upvotes or downvotes, and score field.
+export function incrementVoteAndScore(req, res) {
+  var inc = {};
+  inc[req.query.field] = req.query.amount;
+  if (req.query.field == "downvotes") inc["score"] = -req.query.amount;
+  else inc["score"] = req.query.amount;
+
+  Photo.findByIdAndUpdateAsync(req.params.id, {$inc : inc})
+    .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

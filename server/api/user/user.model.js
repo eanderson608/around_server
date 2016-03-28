@@ -9,6 +9,9 @@ var UserSchema = new Schema({
   firstName: String,
   lastName: String,
   userId: String,
+  upvotes: [String],
+  downvotes: [String],
+  score: Number,
   authToken: String,
   userImageUrl: String
 });
