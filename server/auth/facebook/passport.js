@@ -3,7 +3,7 @@ import strategy from 'passport-facebook-token';
 
 export function setup(User, config) {
   passport.use(new strategy({
-      clientID: process.env.FACEBOOK_ID,
+      clientID: 453958574808328,
       clientSecret: process.env.FACEBOOK_SECRET 
     }, 
     function(accessToken, refreshToken, profile, done) {
