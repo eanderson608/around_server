@@ -43,7 +43,7 @@ router.post('/uploads', upload.single('file'), function (req, res) {
 
     // rename file
     var tmp_path = req.file.path;
-    var target_path = './uploads/' + req.body.fileName;
+    var target_path = 'uploads/' + req.body.fileName;
     console.log(target_path);
 
     fs.rename(tmp_path, target_path, function(err) {
